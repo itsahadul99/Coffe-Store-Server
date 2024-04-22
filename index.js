@@ -38,8 +38,8 @@ async function run() {
     app.get('/coffee/:id', async (req, res) => {
       const id = req.params.id;
       // console.log(id);
-      const options = { _id: new ObjectId(id) }
-      const result = await coffeeCollection.findOne(options)
+      const query = { _id: new ObjectId(id) }
+      const result = await coffeeCollection.findOne(query)
       res.send(result)
     })
     // store coffee on database 
@@ -49,6 +49,31 @@ async function run() {
       const result = await coffeeCollection.insertOne(newCoffee);
       res.send(result)
     })
+
+    // update coffee data 
+    app.put('/coffee/:id', async (req, res) => {
+      const id = req.params.id;
+      // console.log(id);
+      const coffee = req.body;
+      const query = { _id: new ObjectId(id) }
+      const options = { upsert: true }
+      const updateCoffee = {
+        $set: {
+          name: coffee.name,
+          chef: coffee.chef,
+          supplier: coffee.supplier,
+          taste: coffee.taste,
+          category: coffee.category,
+          details: coffee.details,
+          photo: coffee.photo
+        }
+      }
+      const result = await coffeeCollection.updateOne(query, updateCoffee, options)
+      res.send(result)
+
+    })
+
+
     // delete a coffee from data base 
 
     app.delete('/coffee/:id', async (req, res) => {
