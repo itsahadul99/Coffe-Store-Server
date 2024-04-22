@@ -34,7 +34,14 @@ async function run() {
       res.send(result)
     })
 
-
+    // loaded single data 
+    app.get('/coffee/:id', async (req, res) => {
+      const id = req.params.id;
+      // console.log(id);
+      const options = { _id: new ObjectId(id) }
+      const result = await coffeeCollection.findOne(options)
+      res.send(result)
+    })
     // store coffee on database 
     app.post('/coffee', async (req, res) => {
       const newCoffee = req.body;
@@ -47,7 +54,7 @@ async function run() {
     app.delete('/coffee/:id', async (req, res) => {
       const id = req.params.id;
       // console.log(id);
-      const query = {_id: new ObjectId(id)}
+      const query = { _id: new ObjectId(id) }
       const result = await coffeeCollection.deleteOne(query)
       res.send(result)
     })
